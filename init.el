@@ -310,8 +310,12 @@
                               (setq git-gutter:added-sign "+ ")
                               (setq git-gutter:deleted-sign "- ")
                               (setq git-gutter:unchanged-sign nil)
-                              (global-set-key (kbd "C-c n") 'git-gutter:next-hunk)
-                              (global-set-key (kbd "C-c l") 'git-gutter:previous-hunk))))
+                              (global-set-key (kbd "C-c n")
+                                              'git-gutter:next-hunk)
+                              (global-set-key (kbd "C-c l")
+                                              'git-gutter:previous-hunk)
+                              (global-set-key (kbd "C-c h")
+                                              'git-gutter:stage-hunk))))
 
 ;; multiple-cursors
 (add-to-list 'el-get-sources
@@ -655,6 +659,19 @@
 (add-hook 'eshell-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'eshell-mode-hook 'ac-emacs-lisp-mode-setup)
 
+;;; shell-mode settings
+
+(unless (eq system-type 'windows-nt)
+  (setq explicit-shell-file-name "/bin/bash")
+  (setq shell-file-name "/bin/bash"))
+;; always insert at the bottom
+(setq comint-scroll-to-bottom-on-input t)
+(setq comint-input-ignoredups t)
+; what to run when press enter on a line above the current prompt
+(setq comint-get-old-input (lambda () ""))
+;; set lang to enable Chinese display in shell-mode
+(setenv "LANG" "en_US.UTF-8")
+
 ;; ido resentf
 (defun ido-recentf-open ()
   "Use `ido-completing-read' to \\[find-file] a recent file"
@@ -681,3 +698,11 @@
  )
 
 (setq sgml-basic-offset 4)
+
+;;; flycheck
+(defun flycheck-setup ()
+  (eval-after-load 'flycheck
+    '(setq flycheck-checkers (delq 'emacs-lisp-checkdoc flycheck-checkers)))
+  (add-hook 'prog-mode-hook 'flycheck-mode))
+
+(flycheck-setup)
