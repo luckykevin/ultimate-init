@@ -401,11 +401,36 @@
 (global-set-key (kbd "C-c b") 'winner-undo)
 (global-set-key (kbd "C-c f") 'winner-redo)
 
+;;; language specific setting
+
 ;;emacs-lisp shortcuts
 (global-set-key (kbd "C-c C-b") 'eval-buffer)
 (global-set-key (kbd "C-c C-p") 'eval-print-last-sexp)
 (global-set-key (kbd "C-c C-r") 'eval-region)
 (global-set-key (kbd "C-j") 'eval-last-sexp)
+
+;; cc-mode
+
+;; (require ‘cc-mode)
+;; (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
+
+(c-add-style
+ "mine"
+ '("tweaked k&r"
+   (c-basic-offset . 4)
+   (c-comment-only-line-offset . 0)
+   (c-offsets-alist
+    (statement-block-intro . +)
+    (knr-argdecl-intro . 0)
+    (substatement-open . 0)
+    (substatement-label . 0)
+    (label . 0)
+    (statement-cont . +))))
+
+(add-hook 'c-mode-hook
+          '(lambda () (c-set-style "mine")))
+
+
 
 ;;fast vertical naviation
 (global-set-key  (kbd "M-U") (lambda () (interactive) (forward-line -10)))
@@ -689,7 +714,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(safe-local-variable-values (quote ((eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook" (add-hook (quote write-contents-functions) (lambda nil (delete-trailing-whitespace) nil)) (require (quote whitespace)) "Sometimes the mode needs to be toggled off and on." (whitespace-mode 0) (whitespace-mode 1)) (whitespace-line-column . 80) (whitespace-style face trailing lines-tail) (require-final-newline . t)))))
+ '(custom-safe-themes (quote ("7fa9dc3948765d7cf3d7a289e40039c2c64abf0fad5c616453b263b601532493" default)))
+ '(fci-rule-color "#383838")
+ '(safe-local-variable-values (quote ((eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook" (add-hook (quote write-contents-functions) (lambda nil (delete-trailing-whitespace) nil)) (require (quote whitespace)) "Sometimes the mode needs to be toggled off and on." (whitespace-mode 0) (whitespace-mode 1)) (whitespace-line-column . 80) (whitespace-style face trailing lines-tail) (require-final-newline . t))))
+ '(volatile-highlights-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
