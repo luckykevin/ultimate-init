@@ -24,9 +24,8 @@
       '((:name expand-region
                :after (progn
                         (global-set-key (kbd "M-i") 'er/expand-region)
-                        (global-set-key (kbd "M-S-<up>") 'er/mark-inside-pairs)
-                        (global-set-key (kbd "M-S-<down>") 'er/mark-outside-pairs)
-                        (global-set-key (kbd "C-c e q") 'er/mark-inside-quotes)))
+                        (global-set-key (kbd "M-S-<up>") 'er/mark-inside-quotes)
+                        (global-set-key (kbd "M-S-<down>") 'er/mark-inside-pairs)))
         (:name powerline
                :after (powerline-center-theme))
         (:name rainbow-delimiters
@@ -114,98 +113,6 @@
   (indent-according-to-mode)
   (forward-line -1)
   (indent-according-to-mode))
-
-(defun ome-smartparens-setup ()
-  (require 'smartparens-config)
-  (setq sp-autoskip-closing-pair 'always)
-  (setq sp-navigate-close-if-unbalanced t)
-  (smartparens-global-mode t)
-  (show-smartparens-global-mode t)
-
-  ;; keybinding management
-  (define-key sp-keymap (kbd "M-s f") 'sp-forward-sexp)
-  (define-key sp-keymap (kbd "M-s b") 'sp-backward-sexp)
-
-  (define-key sp-keymap (kbd "M-s d") 'sp-down-sexp)
-  (define-key sp-keymap (kbd "M-s D") 'sp-backward-down-sexp)
-  (define-key sp-keymap (kbd "M-s a") 'sp-beginning-of-sexp)
-  (define-key sp-keymap (kbd "M-s e") 'sp-end-of-sexp)
-
-  (define-key sp-keymap (kbd "M-s u") 'sp-up-sexp)
-  ;; (define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
-  (define-key sp-keymap (kbd "M-s U") 'sp-backward-up-sexp)
-  (define-key sp-keymap (kbd "M-s t") 'sp-transpose-sexp)
-
-  (define-key sp-keymap (kbd "M-s n") 'sp-next-sexp)
-  (define-key sp-keymap (kbd "M-s p") 'sp-previous-sexp)
-
-  (define-key sp-keymap (kbd "M-s k") 'sp-kill-sexp)
-  (define-key sp-keymap (kbd "M-s w") 'sp-copy-sexp)
-
-  (define-key sp-keymap (kbd "M-s s") 'sp-forward-slurp-sexp)
-  (define-key sp-keymap (kbd "M-s r") 'sp-forward-barf-sexp)
-  (define-key sp-keymap (kbd "M-s S") 'sp-backward-slurp-sexp)
-  (define-key sp-keymap (kbd "M-s R") 'sp-backward-barf-sexp)
-  (define-key sp-keymap (kbd "M-s F") 'sp-forward-symbol)
-  (define-key sp-keymap (kbd "M-s B") 'sp-backward-symbol)
-
-  (define-key sp-keymap (kbd "M-s [") 'sp-select-previous-thing)
-  (define-key sp-keymap (kbd "M-s ]") 'sp-select-next-thing)
-
-  (define-key sp-keymap (kbd "M-s M-i") 'sp-splice-sexp)
-  (define-key sp-keymap (kbd "M-s <delete>") 'sp-splice-sexp-killing-forward)
-  (define-key sp-keymap (kbd "M-s <backspace>") 'sp-splice-sexp-killing-backward)
-  (define-key sp-keymap (kbd "M-s M-<backspace>") 'sp-splice-sexp-killing-around)
-
-  (define-key sp-keymap (kbd "M-s M-d") 'sp-unwrap-sexp)
-  (define-key sp-keymap (kbd "M-s M-b") 'sp-backward-unwrap-sexp)
-
-  (define-key sp-keymap (kbd "M-s M-t") 'sp-prefix-tag-object)
-  (define-key sp-keymap (kbd "M-s M-p") 'sp-prefix-pair-object)
-  (define-key sp-keymap (kbd "M-s M-c") 'sp-convolute-sexp)
-  (define-key sp-keymap (kbd "M-s M-a") 'sp-absorb-sexp)
-  (define-key sp-keymap (kbd "M-s M-e") 'sp-emit-sexp)
-  (define-key sp-keymap (kbd "M-s M-p") 'sp-add-to-previous-sexp)
-  (define-key sp-keymap (kbd "M-s M-n") 'sp-add-to-next-sexp)
-  (define-key sp-keymap (kbd "M-s M-j") 'sp-join-sexp)
-  (define-key sp-keymap (kbd "M-s M-s") 'sp-split-sexp)
-  (define-key sp-keymap (kbd "M-s M-r") 'sp-raise-sexp)
-
-  ;; pair management
-  (sp-local-pair 'minibuffer-inactive-mode "'" nil :actions nil)
-
-  ;; markdown-mode
-  (sp-with-modes '(markdown-mode gfm-mode rst-mode)
-    (sp-local-pair "*" "*" :bind "C-*")
-    (sp-local-tag "2" "**" "**")
-    (sp-local-tag "s" "```scheme" "```")
-    (sp-local-tag "<"  "<_>" "</_>" :transform 'sp-match-sgml-tags))
-
-  ;; tex-mode latex-mode
-  (sp-with-modes '(tex-mode plain-tex-mode latex-mode)
-    (sp-local-tag "i" "\"<" "\">"))
-
-  ;; html-mode
-  (sp-with-modes '(html-mode sgml-mode)
-    (sp-local-pair "<" ">"))
-
-  ;; lisp modes
-  (sp-with-modes sp--lisp-modes
-    (sp-local-pair "(" nil :bind "C-("))
-
-  (dolist (mode '(c-mode c++-mode java-mode js2-mode sh-mode))
-    (sp-local-pair mode
-                   "{"
-                   nil
-                   :post-handlers
-                   '((ome-create-newline-and-enter-sexp "RET")))))
-
-;; smartparens
-(add-to-list 'el-get-sources
-             '(:name smartparens
-                     :after (progn
-                              (ome-smartparens-setup)
-                              (setq sp-navigate-consider-symbols nil))))
 
 ;; helm
 (add-to-list 'el-get-sources
@@ -296,9 +203,7 @@
                               (key-chord-mode 1)
                               (key-chord-define-global "jk"     'undo)
                               (key-chord-define-global ",."     "<>\C-b")
-                              (key-chord-define-global ",,"     'indent-for-comment)
-                              (key-chord-define-global "qq"     "the ")
-                              (key-chord-define-global "QQ"     "The "))))
+                              (key-chord-define-global ",,"     'indent-for-comment))))
 
 (add-to-list 'el-get-sources
              '(:name git-gutter
@@ -734,3 +639,7 @@
   (add-hook 'prog-mode-hook 'flycheck-mode))
 
 (flycheck-setup)
+
+(require 'dired-x)
+(setq-default dired-omit-files-p t)
+(setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
