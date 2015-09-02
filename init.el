@@ -57,47 +57,6 @@
         (:name midje-mode
                :after (require 'clojure-jump-to-file))))
 
-
-;; clojure
-(add-to-list 'el-get-sources
-             '(:name clojure-mode
-                     (progn
-                       (define-key clojure-test-mode-map (kbd "M-n") 'outline-next-visible-heading)
-                       (define-key clojure-test-mode-map (kbd "M-p") 'outline-previous-visible-heading)
-                       (define-key clojure-mode-map (kbd "C-j")
-                         'cider-eval-last-expression)
-                       (define-xkey clojure-mode-map (kbd "C-S-j")
-                         'cider-eval-print-last-expression)
-                       (define-key clojure-mode-map (kbd "C-c C-b") 'nrepl-eval-buffer))))
-
-;; cider
-(defun cider-setup ()
-  (add-hook 'cider-repl-mode-hook
-            'cider-turn-on-eldoc-mode)
-  (add-hook 'cider-mode-hook
-            'cider-turn-on-eldoc-mode)
-  (setq nrepl-hide-special-buffers t)
-  (setq cider-popup-stacktraces nil)
-  (setq cider-repl-popup-stacktraces t)
-  (setq cider-auto-select-error-buffer t)
-  (setq nrepl-buffer-name-separator "-")
-  (setq nrepl-buffer-name-show-port t)
-  (setq cider-repl-display-in-current-window t)
-  (setq cider-repl-wrap-history t)
-  (add-hook 'cider-repl-mode-hook 'subword-mode)
-  (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode))
-
-;; ac-nrepl
-(defun ac-nrepl-config()
-  (add-hook 'cider-mode-hook 'ac-nrepl-setup)
-  (add-hook 'cider-repl-mode-hook 'ac-nrepl-setup)
-  (eval-after-load "auto-complete"
-    '(add-to-list 'ac-modes 'cider-repl-mode)))
-
-(add-hook 'after-init-hook 'cider-setup)
-(add-hook 'after-init-hook 'ac-nrepl-config)
-
-
 ;; fix the mac PATH variable
 (defun ome-set-exec-path-from-shell-PATH ()
   (let ((path-from-shell (shell-command-to-string "zsh -i -c 'echo $PATH'")))
@@ -146,6 +105,7 @@
                               (setq ac-candidate-menu-min 2))))
 
 (load-theme 'cyberpunk t)
+;; (load-theme 'monokai t)
 
 ;; window-number
 (add-to-list 'el-get-sources
@@ -651,3 +611,7 @@
   (kill-line (- 1 arg)))
 
 (global-set-key (kbd "M-k") 'backward-kill-line)
+
+(set-default-font "Source Code Pro-14")
+(set-fontset-font t 'han (font-spec :family "Hiragino Sans GB" :size 16))
+(set-fontset-font "fontset-default" 'gb18030' ("STHeiti" . "unicode-bmp"))
