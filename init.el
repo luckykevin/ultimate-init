@@ -1,61 +1,28 @@
-(add-to-list 'load-path "~/.emacs.d/el-get/el-get")
-
-(unless (require 'el-get nil 'noerror)
-  (with-current-buffer
-      (url-retrieve-synchronously
-       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
-    (let (el-get-master-branch)
-      (goto-char (point-max))
-      (eval-print-last-sexp))))
-
-(el-get 'sync)
-
-(setq el-get-user-package-directory "~/.emacs.d/config/")
-
 ;; package.el
+(require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
-;; el-get sources
-(setq el-get-sources
-      '((:name expand-region
-               :after (progn
-                        (global-set-key (kbd "M-i") 'er/expand-region)
-                        (global-set-key (kbd "M-S-<up>") 'er/mark-inside-quotes)
-                        (global-set-key (kbd "M-S-<down>") 'er/mark-inside-pairs)))
-        (:name powerline
-               :after (powerline-center-theme))
-        (:name rainbow-delimiters
-               :after (global-rainbow-delimiters-mode))
-        (:name yascroll
-               :after (global-yascroll-bar-mode 1))
-        (:name undo-tree
-               :after (global-undo-tree-mode))
-        (:name markdown-mode
-               :before (add-to-list 'auto-mode-alist
-                                    '("\\.mdpp" . markdown-mode)))
-        (:name find-file-in-project
-               :after (global-set-key (kbd "C-x C-M-f") 'find-file-in-project))
-        (:name exec-path-from-shell
-               :after (when (memq window-system '(mac ns))
-                        (exec-path-from-shell-initialize)))
-        (:name goto-last-change
-               :after (global-set-key (kbd "C-x C-\\") 'goto-last-change))
-        (:name volatile-highlights
-               :after (volatile-highlights-mode t))
-        (:name popwin
-               :after (setq display-buffer-function 'popwin:display-buffer))
-        (:name projectile
-               :after (progn
-                        (projectile-global-mode)
-                        (setq projectile-enable-caching t)
-                        (global-set-key (kbd "C-x c h")
-                                        'helm-projectile)))
-        (:name midje-mode
-               :after (require 'clojure-jump-to-file))))
+
+;; theme
+(load-theme 'cyberpunk t)
+; ;; (load-theme 'monokai t)
+
+
+;; power-line
+(powerline-center-theme)
+
+
+;; yascroll
+(global-yascroll-bar-mode)
+
+
+;; rainbow-delimeter
+(rainbow-delimiters-mode)
+
 
 ;; fix the mac PATH variable
 (defun ome-set-exec-path-from-shell-PATH ()
@@ -66,191 +33,189 @@
 (when (eq system-type 'darwin)
   (when window-system (ome-set-exec-path-from-shell-PATH)))
 
-(defun ome-create-newline-and-enter-sexp (&rest _ignored)
-  "Open a new brace or bracket expression, with relevant newlines and indent. "
-  (newline)
-  (indent-according-to-mode)
-  (forward-line -1)
-  (indent-according-to-mode))
+
+;; goto-last-change
+(global-set-key (kbd "C-x C-\\") 'goto-last-change)
 
 ;; helm
-(add-to-list 'el-get-sources
-             '(:name helm
-                     :after (progn
-                              (require 'helm-config)
-                              (setq helm-input-idle-delay 0.2)
-                              (helm-mode t)
-                              (global-set-key (kbd "C-c <SPC>") 'helm-all-mark-rings)
-                              (global-set-key (kbd "C-x c o") 'helm-occur)
-                              (global-set-key (kbd "C-x C-/") 'helm-find)
-                              (global-set-key (kbd "M-g s") 'helm-do-grep)
-                              (global-set-key (kbd "M-x") 'helm-M-x)
-                              (global-set-key (kbd "M-y") 'helm-show-kill-ring)
-                              (global-set-key (kbd "C-x C-f") 'helm-find-files)
-                              (global-set-key (kbd "C-x C-r") 'helm-recentf))))
+(require 'helm-config)
+(setq helm-input-idle-delay 0.2)
+(helm-mode t)
+(global-set-key (kbd "C-c <SPC>") 'helm-all-mark-rings)
+(global-set-key (kbd "C-x c o") 'helm-occur)
+(global-set-key (kbd "C-x C-/") 'helm-find)
+(global-set-key (kbd "M-g s") 'helm-do-grep)
+(global-set-key (kbd "M-x") 'helm-M-x)
+(global-set-key (kbd "M-y") 'helm-show-kill-ring)
+(global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-r") 'helm-recentf)
+
+
+;; expand-region
+(global-set-key (kbd "M-i") 'er/expand-region)
+(global-set-key (kbd "M-S-<up>") 'er/mark-inside-quotes)
+(global-set-key (kbd "M-S-<down>") 'er/mark-inside-pairs)
+
+
+;; undo-tree
+(global-undo-tree-mode)
 
 
 ;; auto-complete
-(add-to-list 'el-get-sources
-             '(:name auto-complete
-                     :after (progn
-                              (require 'auto-complete-config)
-                              (ac-config-default)
-                              (global-auto-complete-mode t)
-                              (setq ac-dwim t)
-                              (setq ac-use-menu-map t)
-                              (setq ac-quick-help-delay 1)
-                              (setq ac-quick-help-height 60)
-                              (setq ac-auto-start 2)
-                              (setq ac-candidate-menu-min 2))))
+(require 'auto-complete-config)
+(ac-config-default)
+(global-auto-complete-mode t)
+(setq ac-dwim t)
+(setq ac-use-menu-map t)
+(setq ac-quick-help-delay 1)
+(setq ac-quick-help-height 60)
+(setq ac-auto-start 2)
+(setq ac-candidate-menu-min 2)
 
-(load-theme 'cyberpunk t)
-;; (load-theme 'monokai t)
+;; git-gutter
+(setq git-gutter:window-width 2)
+(global-git-gutter-mode t)
+(setq git-gutter:lighter " G-+")
+(setq git-gutter:modified-sign "~ ")
+(setq git-gutter:added-sign "+ ")
+(setq git-gutter:deleted-sign "- ")
+(setq git-gutter:unchanged-sign nil)
+(global-set-key (kbd "C-c n")
+                'git-gutter:next-hunk)
+(global-set-key (kbd "C-c l")
+                'git-gutter:previous-hunk)
+(global-set-key (kbd "C-c h")
+                'git-gutter:stage-hunk)
 
-;; window-number
-(add-to-list 'el-get-sources
-             '(:name window-number
-                     :after (progn
-                              (autoload 'window-number-mode "window-number" t)
-                              (window-number-mode 1)
-                              (autoload 'window-number-meta-mode
-                                "window-number" t)
-                              (window-number-meta-mode 1))))
 
-;; elisp
-(defun ome-remove-elc-on-save ()
-  "If you're saving an elisp file, likely the .elc is no longer valid."
-  (make-local-variable 'after-save-hook)
-  (add-hook 'after-save-hook
-            (lambda ()
-              (if (file-exists-p (concat buffer-file-name "c"))
-                  (delete-file (concat buffer-file-name "c"))))))
+; ;; window-number
+; (add-to-list 'el-get-sources
+;              '(:name window-number
+;                      :after (progn
+;                               (autoload 'window-number-mode "window-number" t)
+;                               (window-number-mode 1)
+;                               (autoload 'window-number-meta-mode
+;                                 "window-number" t)
+;                               (window-number-meta-mode 1))))
 
-(add-hook 'emacs-lisp-mode-hook 'ome-remove-elc-on-save)
+; ;; elisp
+; (defun ome-remove-elc-on-save ()
+;   "If you're saving an elisp file, likely the .elc is no longer valid."
+;   (make-local-variable 'after-save-hook)
+;   (add-hook 'after-save-hook
+;             (lambda ()
+;               (if (file-exists-p (concat buffer-file-name "c"))
+;                   (delete-file (concat buffer-file-name "c"))))))
 
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
+; (add-hook 'emacs-lisp-mode-hook 'ome-remove-elc-on-save)
 
-;; elisp-slime-nav
-(defun ome-elisp-slime-nav-setup ()
-  (dolist (hook '(emacs-lisp-mode-hook
-                  lisp-interaction-mode-hook
-                  ielm-mode-hook
-                  eshell-mode-hook))
-    (add-hook hook 'turn-on-elisp-slime-nav-mode)))
+; (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+; (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
+; (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
-(add-to-list 'el-get-sources
-             '(:name elisp-slime-nav
-                     :after (progn
-                              (ome-elisp-slime-nav-setup))))
+; ;; elisp-slime-nav
+; (defun ome-elisp-slime-nav-setup ()
+;   (dolist (hook '(emacs-lisp-mode-hook
+;                   lisp-interaction-mode-hook
+;                   ielm-mode-hook
+;                   eshell-mode-hook))
+;     (add-hook hook 'turn-on-elisp-slime-nav-mode)))
 
-;; ace-jump-mode
-(add-to-list 'el-get-sources
-             '(:name ace-jump-mode
-                     :after (progn
-                              (setq ace-jump-mode-submode-list
-                                    '(ace-jump-char-mode
-                                      ace-jump-line-mode))
-                              (global-set-key (kbd "C-o") 'ace-jump-mode)
-                              (ace-jump-mode-enable-mark-sync)
-                              (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark))))
+; (add-to-list 'el-get-sources
+;              '(:name elisp-slime-nav
+;                      :after (progn
+;                               (ome-elisp-slime-nav-setup))))
 
-;; key-chord
-(add-to-list 'el-get-sources
-             '(:name key-chord
-                     :after (progn
-                              (key-chord-mode 1)
-                              (key-chord-define-global "jk"     'undo)
-                              (key-chord-define-global ",."     "<>\C-b")
-                              (key-chord-define-global ",,"     'indent-for-comment))))
+; ;; ace-jump-mode
+; (add-to-list 'el-get-sources
+;              '(:name ace-jump-mode
+;                      :after (progn
+;                               (setq ace-jump-mode-submode-list
+;                                     '(ace-jump-char-mode
+;                                       ace-jump-line-mode))
+;                               (global-set-key (kbd "C-o") 'ace-jump-mode)
+;                               (ace-jump-mode-enable-mark-sync)
+;                               (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark))))
 
-(add-to-list 'el-get-sources
-             '(:name git-gutter
-                     :after (progn
-                              (setq git-gutter:window-width 2)
-                              (global-git-gutter-mode t)
-                              (setq git-gutter:lighter " G-+")
-                              (setq git-gutter:modified-sign "~ ")
-                              (setq git-gutter:added-sign "+ ")
-                              (setq git-gutter:deleted-sign "- ")
-                              (setq git-gutter:unchanged-sign nil)
-                              (global-set-key (kbd "C-c n")
-                                              'git-gutter:next-hunk)
-                              (global-set-key (kbd "C-c l")
-                                              'git-gutter:previous-hunk)
-                              (global-set-key (kbd "C-c h")
-                                              'git-gutter:stage-hunk))))
+; ;; key-chord
+; (add-to-list 'el-get-sources
+;              '(:name key-chord
+;                      :after (progn
+;                               (key-chord-mode 1)
+;                               (key-chord-define-global "jk"     'undo)
+;                               (key-chord-define-global ",."     "<>\C-b")
+;                               (key-chord-define-global ",,"     'indent-for-comment))))
 
-;; multiple-cursors
-(add-to-list 'el-get-sources
-             '(:name multiple-cursors
-                     :after (progn
-                              (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-                              (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-                              (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
-                              (global-set-key (kbd "C-c e l")
-                                              'mc/edit-lines))))
+
+; ;; multiple-cursors
+; (add-to-list 'el-get-sources
+;              '(:name multiple-cursors
+;                      :after (progn
+;                               (global-set-key (kbd "C->") 'mc/mark-next-like-this)
+;                               (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+;                               (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
+;                               (global-set-key (kbd "C-c e l")
+;                                               'mc/edit-lines))))
 
 
 
-(eval-after-load 'popup
-  '(progn
-     (define-key popup-menu-keymap (kbd "C-n") 'popup-next)
-     (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
-     (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
-     (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
-     (define-key popup-menu-keymap (kbd "C-p") 'popup-previous)))
+; (eval-after-load 'popup
+;   '(progn
+;      (define-key popup-menu-keymap (kbd "C-n") 'popup-next)
+;      (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
+;      (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
+;      (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
+;      (define-key popup-menu-keymap (kbd "C-p") 'popup-previous)))
 
-(defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
-  (when (featurep 'popup)
-    (popup-menu*
-     (mapcar
-      (lambda (choice)
-        (popup-make-item
-         (or (and display-fn (funcall display-fn choice))
-             choice)
-         :value choice))
-      choices)
-     :prompt prompt
-     ;; start isearch mode immediately
-     :isearch t)))
+; (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
+;   (when (featurep 'popup)
+;     (popup-menu*
+;      (mapcar
+;       (lambda (choice)
+;         (popup-make-item
+;          (or (and display-fn (funcall display-fn choice))
+;              choice)
+;          :value choice))
+;       choices)
+;      :prompt prompt
+;      ;; start isearch mode immediately
+;      :isearch t)))
 
-;; yasnippet
-(add-to-list 'el-get-sources
-             '(:name yasnippet
-                     :depends (popup)
-                     :after (progn
-                              (setq yas-prompt-functions
-                                    '(yas-popup-isearch-prompt
-                                      yas-no-prompt))
-                              (yas-reload-all)
-                              (add-hook 'prog-mode-hook
-                                        '(lambda ()
-                                           (yas-minor-mode))))))
-
-
-(when (or (executable-find "ack") (executable-find "ack-grep"))
-  (add-to-list 'el-get-sources
-               '(:name ack-and-a-half)))
-
-(setq my-packages
-      (append
-       '(smooth-scrolling quickrun quick-jump scratch)
-       (mapcar 'el-get-source-name el-get-sources)))
-
-(el-get 'sync my-packages)
-;; el-get ends
+; ;; yasnippet
+; (add-to-list 'el-get-sources
+;              '(:name yasnippet
+;                      :depends (popup)
+;                      :after (progn
+;                               (setq yas-prompt-functions
+;                                     '(yas-popup-isearch-prompt
+;                                       yas-no-prompt))
+;                               (yas-reload-all)
+;                               (add-hook 'prog-mode-hook
+;                                         '(lambda ()
+;                                            (yas-minor-mode))))))
 
 
-;; Customized configuration
+; (when (or (executable-find "ack") (executable-find "ack-grep"))
+;   (add-to-list 'el-get-sources
+;                '(:name ack-and-a-half)))
 
-;; mac specific settings
+; (setq my-packages
+;       (append
+;        '(smooth-scrolling quickrun quick-jump scratch)
+;        (mapcar 'el-get-source-name el-get-sources)))
 
-(setq mac-option-key-is-meta nil)
-(setq mac-command-key-is-meta t)
-(setq mac-command-modifier 'meta)
-(setq mac-option-modifier nil)
+; (el-get 'sync my-packages)
+; ;; el-get ends
+
+
+;;; Customized configuration
+
+; ;; mac specific settings
+
+; (setq mac-option-key-is-meta nil)
+; (setq mac-command-key-is-meta t)
+; (setq mac-command-modifier 'meta)
+; (setq mac-option-modifier nil)
 
 ;; key-bindings
 
@@ -263,38 +228,16 @@
 
 (define-key lisp-mode-shared-map (kbd "RET") 'reindent-then-newline-and-indent)
 
-(global-set-key (kbd "C-c b") 'winner-undo)
-(global-set-key (kbd "C-c f") 'winner-redo)
+; (global-set-key (kbd "C-c b") 'winner-undo)
+; (global-set-key (kbd "C-c f") 'winner-redo)
 
-;;; language specific setting
+; ;;; language specific setting
 
 ;;emacs-lisp shortcuts
 (global-set-key (kbd "C-c C-b") 'eval-buffer)
 (global-set-key (kbd "C-c C-p") 'eval-print-last-sexp)
 (global-set-key (kbd "C-c C-r") 'eval-region)
 (global-set-key (kbd "C-j") 'eval-last-sexp)
-
-;; cc-mode
-
-;; (require ‘cc-mode)
-;; (define-key c-mode-base-map (kbd "RET") 'newline-and-indent)
-
-(c-add-style
- "mine"
- '("tweaked k&r"
-   (c-basic-offset . 4)
-   (c-comment-only-line-offset . 0)
-   (c-offsets-alist
-    (statement-block-intro . +)
-    (knr-argdecl-intro . 0)
-    (substatement-open . 0)
-    (substatement-label . 0)
-    (label . 0)
-    (statement-cont . +))))
-
-(add-hook 'c-mode-hook
-          '(lambda () (c-set-style "mine")))
-
 
 
 ;;fast vertical naviation
@@ -363,24 +306,24 @@
 (global-set-key (kbd "<C-return>") 'open-line-below)
 (global-set-key (kbd "<C-S-return>") 'open-line-above)
 
-(defun live-show-messages ()
-  (interactive)
-  (popwin:display-buffer "*Messages*"))
+; (defun live-show-messages ()
+;   (interactive)
+;   (popwin:display-buffer "*Messages*"))
 
-(global-set-key (kbd "C-c s m") 'live-show-messages)
+; (global-set-key (kbd "C-c s m") 'live-show-messages)
 
-;;scroll other window
-(global-set-key (kbd "C-M-]") 'scroll-other-window)
-(global-set-key (kbd "C-M-[") 'scroll-other-window-down)
+; ;;scroll other window
+; (global-set-key (kbd "C-M-]") 'scroll-other-window)
+; (global-set-key (kbd "C-M-[") 'scroll-other-window-down)
 
-(global-set-key (kbd "M-'") 'repeat)
-(global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
-(global-set-key (kbd "C-c y") 'bury-buffer)
-(global-set-key (kbd "C-x C-b") 'ibuffer)
+; (global-set-key (kbd "M-'") 'repeat)
+; (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
+; (global-set-key (kbd "C-c y") 'bury-buffer)
+; (global-set-key (kbd "C-x C-b") 'ibuffer)
 
-;;el-get
-(global-set-key (kbd "C-c e i") 'el-get-install)
-(global-set-key (kbd "C-c e d") 'el-get-describe)
+; ;;el-get
+; (global-set-key (kbd "C-c e i") 'el-get-install)
+; (global-set-key (kbd "C-c e d") 'el-get-describe)
 
 (defun live-lisp-describe-thing-at-point ()
   "Show the documentation of the Elisp function and variable near point.
@@ -406,26 +349,26 @@
 
 (define-key lisp-mode-shared-map (kbd "M-RET") 'live-lisp-describe-thing-at-point)
 
-;;imenu
-(global-set-key (kbd "C-.") 'imenu)
+; ;;imenu
+; (global-set-key (kbd "C-.") 'imenu)
 
-;;bookmark
-(global-set-key (kbd "<f8>") 'bookmark-set)
-(global-set-key (kbd "<f9>") 'bookmark-jump)
-(global-set-key (kbd "<f7>") 'bookmark-bmenu-list)
+; ;;bookmark
+; (global-set-key (kbd "<f8>") 'bookmark-set)
+; (global-set-key (kbd "<f9>") 'bookmark-jump)
+; (global-set-key (kbd "<f7>") 'bookmark-bmenu-list)
 
-;;idomenu
-(global-set-key (kbd "C-c M-b") 'find-file-at-point)
+; ;;idomenu
+; (global-set-key (kbd "C-c M-b") 'find-file-at-point)
 
-;;candidates
-(global-set-key (kbd "C-c j p") 'quick-jump-go-back)
-(global-set-key (kbd "C-c j b") 'quick-jump-go-back)
-(global-set-key (kbd "C-c j m") 'quick-jump-push-marker)
-(global-set-key (kbd "C-c j n") 'quick-jump-go-forward)
-(global-set-key (kbd "C-c j f") 'quick-jump-go-forward)
-(global-set-key (kbd "C-c j c") 'quick-jump-clear-all-marker)
+; ;;candidates
+; (global-set-key (kbd "C-c j p") 'quick-jump-go-back)
+; (global-set-key (kbd "C-c j b") 'quick-jump-go-back)
+; (global-set-key (kbd "C-c j m") 'quick-jump-push-marker)
+; (global-set-key (kbd "C-c j n") 'quick-jump-go-forward)
+; (global-set-key (kbd "C-c j f") 'quick-jump-go-forward)
+; (global-set-key (kbd "C-c j c") 'quick-jump-clear-all-marker)
 
-(global-set-key (kbd "C-c d f") 'diff-buffer-with-file)
+; (global-set-key (kbd "C-c d f") 'diff-buffer-with-file)
 
 
 
@@ -451,57 +394,57 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; enable to support navigate in camelCase words
 (global-subword-mode t)
-;; hide startup splash screen
-(setq inhibit-startup-screen t)
+; ;; hide startup splash screen
+; (setq inhibit-startup-screen t)
 
 (setq-default major-mode 'text-mode)
 
-;;; ido-mode
-(setq ido-enable-prefix nil)
-(setq ido-enable-case nil)
-(setq ido-enable-flex-matching t)
-(setq ido-everywhere t)
-(ido-mode t)
+; ;;; ido-mode
+; (setq ido-enable-prefix nil)
+; (setq ido-enable-case nil)
+; (setq ido-enable-flex-matching t)
+; (setq ido-everywhere t)
+; (ido-mode t)
 
-;; use icomplete in minibuffer
-(icomplete-mode t)
-(delete-selection-mode t)
+; ;; use icomplete in minibuffer
+; (icomplete-mode t)
+; (delete-selection-mode t)
 
-;; Auto refresh buffers
-(global-auto-revert-mode 1)
+; ;; Auto refresh buffers
+; (global-auto-revert-mode 1)
 
-;; Also auto refresh dired, but be quiet about it
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
+; ;; Also auto refresh dired, but be quiet about it
+; (setq global-auto-revert-non-file-buffers t)
+; (setq auto-revert-verbose nil)
 
 
-;; GUI
-(setq popwin:special-display-config
-      '(("*Help*"  :height 30)
-        ("*Completions*" :noselect t)
-        ("*Messages*" :noselect t :height 30)
-        ("*Apropos*" :noselect t :height 30)
-        ("*compilation*" :noselect t)
-        ("*Backtrace*" :height 30)
-        ("*Messages*" :height 30)
-        ("*Occur*" :noselect t)
-        ("*Ido Completions*" :noselect t :height 30)
-        ("*magit-commit*" :noselect t :height 40 :width 80 :stick t)
-        ("*magit-diff*" :noselect t :height 40 :width 80)
-        ("*magit-edit-log*" :noselect t :height 15 :width 80)
-        ("\\*ansi-term\\*.*" :regexp t :height 30)
-        ("*shell*" :height 30)
-        (".*overtone.log" :regexp t :height 30)
-        ("*gists*" :height 30)
-        ("*sldb.*":regexp t :height 30)
-        ;; ("*nrepl-error*" :height 30 :stick t)
-        ;; ("*nrepl-doc*" :height 30 :stick t)
-        ;; ("*nrepl-src*" :height 30 :stick t)
-        ;; ("*nrepl-result*" :height 30 :stick t)
-        ;; ("*nrepl-macroexpansion*" :height 30 :stick t)
-        ("*Kill Ring*" :height 30)
-        ("*Compile-Log*" :height 30 :stick t)
-        ("*git-gutter:diff*" :height 30 :stick t)))
+; ;; GUI
+; (setq popwin:special-display-config
+;       '(("*Help*"  :height 30)
+;         ("*Completions*" :noselect t)
+;         ("*Messages*" :noselect t :height 30)
+;         ("*Apropos*" :noselect t :height 30)
+;         ("*compilation*" :noselect t)
+;         ("*Backtrace*" :height 30)
+;         ("*Messages*" :height 30)
+;         ("*Occur*" :noselect t)
+;         ("*Ido Completions*" :noselect t :height 30)
+;         ("*magit-commit*" :noselect t :height 40 :width 80 :stick t)
+;         ("*magit-diff*" :noselect t :height 40 :width 80)
+;         ("*magit-edit-log*" :noselect t :height 15 :width 80)
+;         ("\\*ansi-term\\*.*" :regexp t :height 30)
+;         ("*shell*" :height 30)
+;         (".*overtone.log" :regexp t :height 30)
+;         ("*gists*" :height 30)
+;         ("*sldb.*":regexp t :height 30)
+;         ;; ("*nrepl-error*" :height 30 :stick t)
+;         ;; ("*nrepl-doc*" :height 30 :stick t)
+;         ;; ("*nrepl-src*" :height 30 :stick t)
+;         ;; ("*nrepl-result*" :height 30 :stick t)
+;         ;; ("*nrepl-macroexpansion*" :height 30 :stick t)
+;         ("*Kill Ring*" :height 30)
+;         ("*Compile-Log*" :height 30 :stick t)
+;         ("*git-gutter:diff*" :height 30 :stick t)))
 
 ;; remove useless gui
 (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode))
@@ -524,85 +467,85 @@
      'default nil :font "Monaco 13"))
 
 
-;; mode-hooks
-;; outline-mode
-(add-hook 'prog-mode-hook
-          (lambda ()
-            (outline-minor-mode t)))
+; ;; mode-hooks
+; ;; outline-mode
+; (add-hook 'prog-mode-hook
+;           (lambda ()
+;             (outline-minor-mode t)))
 
-;; winner undo and redo
-(when (fboundp 'winner-mode)
-  (winner-mode 1))
+; ;; winner undo and redo
+; (when (fboundp 'winner-mode)
+;   (winner-mode 1))
 
-;; primitive backup-dir
-(setq backup-directory-alist
-      `((".*" . ,temporary-file-directory)))
-(setq auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+; ;; primitive backup-dir
+; (setq backup-directory-alist
+;       `((".*" . ,temporary-file-directory)))
+; (setq auto-save-file-name-transforms
+;       `((".*" ,temporary-file-directory t)))
 
-;; eshell
-(add-hook 'eshell-mode-hook
-          (lambda ()
-            (add-to-list 'ac-sources 'ac-source-pcomplete)))
+; ;; eshell
+; (add-hook 'eshell-mode-hook
+;           (lambda ()
+;             (add-to-list 'ac-sources 'ac-source-pcomplete)))
 
-(add-to-list 'ac-modes 'eshell-mode)
-(add-hook 'eshell-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'eshell-mode-hook 'ac-emacs-lisp-mode-setup)
+; (add-to-list 'ac-modes 'eshell-mode)
+; (add-hook 'eshell-mode-hook 'turn-on-eldoc-mode)
+; (add-hook 'eshell-mode-hook 'ac-emacs-lisp-mode-setup)
 
-;;; shell-mode settings
+; ;;; shell-mode settings
 
-(unless (eq system-type 'windows-nt)
-  (setq explicit-shell-file-name "/bin/bash")
-  (setq shell-file-name "/bin/bash"))
-;; always insert at the bottom
-(setq comint-scroll-to-bottom-on-input t)
-(setq comint-input-ignoredups t)
-; what to run when press enter on a line above the current prompt
-(setq comint-get-old-input (lambda () ""))
-;; set lang to enable Chinese display in shell-mode
-(setenv "LANG" "en_US.UTF-8")
+; (unless (eq system-type 'windows-nt)
+;   (setq explicit-shell-file-name "/bin/bash")
+;   (setq shell-file-name "/bin/bash"))
+; ;; always insert at the bottom
+; (setq comint-scroll-to-bottom-on-input t)
+; (setq comint-input-ignoredups t)
+; ; what to run when press enter on a line above the current prompt
+; (setq comint-get-old-input (lambda () ""))
+; ;; set lang to enable Chinese display in shell-mode
+; (setenv "LANG" "en_US.UTF-8")
 
-;; ido resentf
-(defun ido-recentf-open ()
-  "Use `ido-completing-read' to \\[find-file] a recent file"
-  (interactive)
-  (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-      (message "Opening file...")
-    (message "Aborting")))
+; ;; ido resentf
+; (defun ido-recentf-open ()
+;   "Use `ido-completing-read' to \\[find-file] a recent file"
+;   (interactive)
+;   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
+;       (message "Opening file...")
+;     (message "Aborting")))
 
-(setq recentf-save-file (concat user-emacs-directory ".recentf"))
-(recentf-mode t)
-(setq recentf-max-saved-items 50)
+; (setq recentf-save-file (concat user-emacs-directory ".recentf"))
+; (recentf-mode t)
+; (setq recentf-max-saved-items 50)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes (quote ("7fa9dc3948765d7cf3d7a289e40039c2c64abf0fad5c616453b263b601532493" default)))
- '(fci-rule-color "#383838")
- '(safe-local-variable-values (quote ((eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook" (add-hook (quote write-contents-functions) (lambda nil (delete-trailing-whitespace) nil)) (require (quote whitespace)) "Sometimes the mode needs to be toggled off and on." (whitespace-mode 0) (whitespace-mode 1)) (whitespace-line-column . 80) (whitespace-style face trailing lines-tail) (require-final-newline . t))))
- '(volatile-highlights-mode nil))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
+; (custom-set-variables
+;  ;; custom-set-variables was added by Custom.
+;  ;; If you edit it by hand, you could mess it up, so be careful.
+;  ;; Your init file should contain only one such instance.
+;  ;; If there is more than one, they won't work right.
+;  '(custom-safe-themes (quote ("7fa9dc3948765d7cf3d7a289e40039c2c64abf0fad5c616453b263b601532493" default)))
+;  '(fci-rule-color "#383838")
+;  '(safe-local-variable-values (quote ((eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook" (add-hook (quote write-contents-functions) (lambda nil (delete-trailing-whitespace) nil)) (require (quote whitespace)) "Sometimes the mode needs to be toggled off and on." (whitespace-mode 0) (whitespace-mode 1)) (whitespace-line-column . 80) (whitespace-style face trailing lines-tail) (require-final-newline . t))))
+;  '(volatile-highlights-mode nil))
+; (custom-set-faces
+;  ;; custom-set-faces was added by Custom.
+;  ;; If you edit it by hand, you could mess it up, so be careful.
+;  ;; Your init file should contain only one such instance.
+;  ;; If there is more than one, they won't work right.
+;  )
 
 (setq sgml-basic-offset 4)
 
-;;; flycheck
-(defun flycheck-setup ()
-  (eval-after-load 'flycheck
-    '(setq flycheck-checkers (delq 'emacs-lisp-checkdoc flycheck-checkers)))
-  (add-hook 'prog-mode-hook 'flycheck-mode))
+; ;;; flycheck
+; (defun flycheck-setup ()
+;   (eval-after-load 'flycheck
+;     '(setq flycheck-checkers (delq 'emacs-lisp-checkdoc flycheck-checkers)))
+;   (add-hook 'prog-mode-hook 'flycheck-mode))
 
-(flycheck-setup)
+; (flycheck-setup)
 
-(require 'dired-x)
-(setq-default dired-omit-files-p t)
-(setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
+; (require 'dired-x)
+; (setq-default dired-omit-files-p t)
+; (setq dired-omit-files (concat dired-omit-files "\\|^\\..+$"))
 
 
 (defun backward-kill-line (arg)
@@ -612,6 +555,44 @@
 
 (global-set-key (kbd "M-k") 'backward-kill-line)
 
-(set-default-font "Source Code Pro-14")
-(set-fontset-font t 'han (font-spec :family "Hiragino Sans GB" :size 16))
-(set-fontset-font "fontset-default" 'gb18030' ("STHeiti" . "unicode-bmp"))
+; (set-default-font "Source Code Pro-14")
+; (set-fontset-font t 'han (font-spec :family "Hiragino Sans GB" :size 16))
+; (set-fontset-font "fontset-default" 'gb18030' ("STHeiti" . "unicode-bmp"))
+
+; ;; el-get sources
+; (setq el-get-sources
+;       '((:name expand-region
+;                :after (progn
+;                         (global-set-key (kbd "M-i") 'er/expand-region)
+;                         (global-set-key (kbd "M-S-<up>") 'er/mark-inside-quotes)
+;                         (global-set-key (kbd "M-S-<down>") 'er/mark-inside-pairs)))
+;         (:name powerline
+;                :after (powerline-center-theme))
+;         (:name rainbow-delimiters
+;                :after (global-rainbow-delimiters-mode))
+;         (:name yascroll
+;                :after (global-yascroll-bar-mode 1))
+;         (:name undo-tree
+;                :after (global-undo-tree-mode))
+;         (:name markdown-mode
+;                :before (add-to-list 'auto-mode-alist
+;                                     '("\\.mdpp" . markdown-mode)))
+;         (:name find-file-in-project
+;                :after (global-set-key (kbd "C-x C-M-f") 'find-file-in-project))
+;         (:name exec-path-from-shell
+;                :after (when (memq window-system '(mac ns))
+;                         (exec-path-from-shell-initialize)))
+;         (:name goto-last-change
+;                :after (global-set-key (kbd "C-x C-\\") 'goto-last-change))
+;         (:name volatile-highlights
+;                :after (volatile-highlights-mode t))
+;         (:name popwin
+;                :after (setq display-buffer-function 'popwin:display-buffer))
+;         (:name projectile
+;                :after (progn
+;                         (projectile-global-mode)
+;                         (setq projectile-enable-caching t)
+;                         (global-set-key (kbd "C-x c h")
+;                                         'helm-projectile)))
+;         (:name midje-mode
+;                :after (require 'clojure-jump-to-file))))
