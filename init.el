@@ -21,7 +21,7 @@
 
 
 ;; rainbow-delimeter
-(rainbow-delimiters-mode)
+(rainbow-delimiters-mode t)
 
 
 ;; fix the mac PATH variable
@@ -199,13 +199,6 @@
 ;   (add-to-list 'el-get-sources
 ;                '(:name ack-and-a-half)))
 
-; (setq my-packages
-;       (append
-;        '(smooth-scrolling quickrun quick-jump scratch)
-;        (mapcar 'el-get-source-name el-get-sources)))
-
-; (el-get 'sync my-packages)
-; ;; el-get ends
 
 
 ;;; Customized configuration
@@ -321,9 +314,6 @@
 ; (global-set-key (kbd "C-c y") 'bury-buffer)
 ; (global-set-key (kbd "C-x C-b") 'ibuffer)
 
-; ;;el-get
-; (global-set-key (kbd "C-c e i") 'el-get-install)
-; (global-set-key (kbd "C-c e d") 'el-get-describe)
 
 (defun live-lisp-describe-thing-at-point ()
   "Show the documentation of the Elisp function and variable near point.
@@ -418,33 +408,30 @@
 ; (setq auto-revert-verbose nil)
 
 
-; ;; GUI
-; (setq popwin:special-display-config
-;       '(("*Help*"  :height 30)
-;         ("*Completions*" :noselect t)
-;         ("*Messages*" :noselect t :height 30)
-;         ("*Apropos*" :noselect t :height 30)
-;         ("*compilation*" :noselect t)
-;         ("*Backtrace*" :height 30)
-;         ("*Messages*" :height 30)
-;         ("*Occur*" :noselect t)
-;         ("*Ido Completions*" :noselect t :height 30)
-;         ("*magit-commit*" :noselect t :height 40 :width 80 :stick t)
-;         ("*magit-diff*" :noselect t :height 40 :width 80)
-;         ("*magit-edit-log*" :noselect t :height 15 :width 80)
-;         ("\\*ansi-term\\*.*" :regexp t :height 30)
-;         ("*shell*" :height 30)
-;         (".*overtone.log" :regexp t :height 30)
-;         ("*gists*" :height 30)
-;         ("*sldb.*":regexp t :height 30)
-;         ;; ("*nrepl-error*" :height 30 :stick t)
-;         ;; ("*nrepl-doc*" :height 30 :stick t)
-;         ;; ("*nrepl-src*" :height 30 :stick t)
-;         ;; ("*nrepl-result*" :height 30 :stick t)
-;         ;; ("*nrepl-macroexpansion*" :height 30 :stick t)
-;         ("*Kill Ring*" :height 30)
-;         ("*Compile-Log*" :height 30 :stick t)
-;         ("*git-gutter:diff*" :height 30 :stick t)))
+(require 'popwin)
+(popwin-mode 1)
+;; GUI
+(setq popwin:special-display-config
+      '(("*Help*"  :height 30)
+        ("*Completions*" :noselect t)
+        ("*Messages*" :noselect t :height 30)
+        ("*Apropos*" :noselect t :height 30)
+        ("*compilation*" :noselect t)
+        ("*Backtrace*" :height 30)
+        ("*Messages*" :height 30)
+        ("*Occur*" :noselect t)
+        ("*Ido Completions*" :noselect t :height 30)
+        ("*magit-commit*" :noselect t :height 40 :width 80 :stick t)
+        ("*magit-diff*" :noselect t :height 40 :width 80)
+        ("*magit-edit-log*" :noselect t :height 15 :width 80)
+        ("\\*ansi-term\\*.*" :regexp t :height 30)
+        ("*shell*" :height 30)
+        (".*overtone.log" :regexp t :height 30)
+        ("*gists*" :height 30)
+        ("*sldb.*":regexp t :height 30)
+        ("*Kill Ring*" :height 30)
+        ("*Compile-Log*" :height 30 :stick t)
+        ("*git-gutter:diff*" :height 30 :stick t)))
 
 ;; remove useless gui
 (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode))
@@ -467,21 +454,21 @@
      'default nil :font "Monaco 13"))
 
 
-; ;; mode-hooks
-; ;; outline-mode
-; (add-hook 'prog-mode-hook
-;           (lambda ()
-;             (outline-minor-mode t)))
+;; mode-hooks
+;; outline-mode
+(add-hook 'prog-mode-hook
+          (lambda ()
+            (outline-minor-mode t)))
 
 ; ;; winner undo and redo
 ; (when (fboundp 'winner-mode)
 ;   (winner-mode 1))
 
-; ;; primitive backup-dir
-; (setq backup-directory-alist
-;       `((".*" . ,temporary-file-directory)))
-; (setq auto-save-file-name-transforms
-;       `((".*" ,temporary-file-directory t)))
+;; primitive backup-dir
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
 
 ; ;; eshell
 ; (add-hook 'eshell-mode-hook
@@ -517,21 +504,6 @@
 ; (recentf-mode t)
 ; (setq recentf-max-saved-items 50)
 
-; (custom-set-variables
-;  ;; custom-set-variables was added by Custom.
-;  ;; If you edit it by hand, you could mess it up, so be careful.
-;  ;; Your init file should contain only one such instance.
-;  ;; If there is more than one, they won't work right.
-;  '(custom-safe-themes (quote ("7fa9dc3948765d7cf3d7a289e40039c2c64abf0fad5c616453b263b601532493" default)))
-;  '(fci-rule-color "#383838")
-;  '(safe-local-variable-values (quote ((eval ignore-errors "Write-contents-functions is a buffer-local alternative to before-save-hook" (add-hook (quote write-contents-functions) (lambda nil (delete-trailing-whitespace) nil)) (require (quote whitespace)) "Sometimes the mode needs to be toggled off and on." (whitespace-mode 0) (whitespace-mode 1)) (whitespace-line-column . 80) (whitespace-style face trailing lines-tail) (require-final-newline . t))))
-;  '(volatile-highlights-mode nil))
-; (custom-set-faces
-;  ;; custom-set-faces was added by Custom.
-;  ;; If you edit it by hand, you could mess it up, so be careful.
-;  ;; Your init file should contain only one such instance.
-;  ;; If there is more than one, they won't work right.
-;  )
 
 (setq sgml-basic-offset 4)
 
@@ -557,4 +529,14 @@
 
 ; (set-default-font "Source Code Pro-14")
 ; (set-fontset-font t 'han (font-spec :family "Hiragino Sans GB" :size 16))
-; (set-fontset-font "fontset-default" 'gb18030' ("STHeiti" . "unicode-bmp"))
+                                        ; (set-fontset-font "fontset-default" 'gb18030' ("STHeiti" . "unicode-bmp"))
+
+(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/moe-theme-20151124.1509/")
+(setq ad-redefinition-action 'accept)
+(load-theme 'moe-dark t)
+
+(require 'ac-geiser)
+(add-hook 'geiser-mode-hook 'ac-geiser-setup)
+(add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'geiser-repl-mode))
