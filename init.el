@@ -8,7 +8,7 @@
 
 
 ;; theme
-(load-theme 'cyberpunk t)
+; (load-theme 'cyberpunk t)
 ; ;; (load-theme 'monokai t)
 
 
@@ -89,14 +89,11 @@
 
 
 ; ;; window-number
-; (add-to-list 'el-get-sources
-;              '(:name window-number
-;                      :after (progn
-;                               (autoload 'window-number-mode "window-number" t)
-;                               (window-number-mode 1)
-;                               (autoload 'window-number-meta-mode
-;                                 "window-number" t)
-;                               (window-number-meta-mode 1))))
+(autoload 'window-number-mode "window-number" t)
+(window-number-mode 1)
+(autoload 'window-number-meta-mode
+  "window-number" t)
+(window-number-meta-mode 1)
 
 ; ;; elisp
 ; (defun ome-remove-elc-on-save ()
@@ -127,24 +124,12 @@
 ;                               (ome-elisp-slime-nav-setup))))
 
 ; ;; ace-jump-mode
-; (add-to-list 'el-get-sources
-;              '(:name ace-jump-mode
-;                      :after (progn
-;                               (setq ace-jump-mode-submode-list
-;                                     '(ace-jump-char-mode
-;                                       ace-jump-line-mode))
-;                               (global-set-key (kbd "C-o") 'ace-jump-mode)
-;                               (ace-jump-mode-enable-mark-sync)
-;                               (define-key global-map (kbd "C-x SPC") 'ace-jump-mode-pop-mark))))
-
-; ;; key-chord
-; (add-to-list 'el-get-sources
-;              '(:name key-chord
-;                      :after (progn
-;                               (key-chord-mode 1)
-;                               (key-chord-define-global "jk"     'undo)
-;                               (key-chord-define-global ",."     "<>\C-b")
-;                               (key-chord-define-global ",,"     'indent-for-comment))))
+(require 'ace-jump-mode)
+(setq ace-jump-mode-submode-list
+      '(ace-jump-char-mode
+        ace-jump-line-mode))
+(global-set-key (kbd "C-o") 'ace-jump-mode)
+(ace-jump-mode-enable-mark-sync)
 
 
 ; ;; multiple-cursors
@@ -157,47 +142,6 @@
 ;                               (global-set-key (kbd "C-c e l")
 ;                                               'mc/edit-lines))))
 
-
-
-; (eval-after-load 'popup
-;   '(progn
-;      (define-key popup-menu-keymap (kbd "C-n") 'popup-next)
-;      (define-key popup-menu-keymap (kbd "TAB") 'popup-next)
-;      (define-key popup-menu-keymap (kbd "<tab>") 'popup-next)
-;      (define-key popup-menu-keymap (kbd "<backtab>") 'popup-previous)
-;      (define-key popup-menu-keymap (kbd "C-p") 'popup-previous)))
-
-; (defun yas-popup-isearch-prompt (prompt choices &optional display-fn)
-;   (when (featurep 'popup)
-;     (popup-menu*
-;      (mapcar
-;       (lambda (choice)
-;         (popup-make-item
-;          (or (and display-fn (funcall display-fn choice))
-;              choice)
-;          :value choice))
-;       choices)
-;      :prompt prompt
-;      ;; start isearch mode immediately
-;      :isearch t)))
-
-; ;; yasnippet
-; (add-to-list 'el-get-sources
-;              '(:name yasnippet
-;                      :depends (popup)
-;                      :after (progn
-;                               (setq yas-prompt-functions
-;                                     '(yas-popup-isearch-prompt
-;                                       yas-no-prompt))
-;                               (yas-reload-all)
-;                               (add-hook 'prog-mode-hook
-;                                         '(lambda ()
-;                                            (yas-minor-mode))))))
-
-
-; (when (or (executable-find "ack") (executable-find "ack-grep"))
-;   (add-to-list 'el-get-sources
-;                '(:name ack-and-a-half)))
 
 
 
@@ -408,30 +352,14 @@
 ; (setq auto-revert-verbose nil)
 
 
+
+;;; GUI
+
+;; popwin
 (require 'popwin)
 (popwin-mode 1)
-;; GUI
-(setq popwin:special-display-config
-      '(("*Help*"  :height 30)
-        ("*Completions*" :noselect t)
-        ("*Messages*" :noselect t :height 30)
-        ("*Apropos*" :noselect t :height 30)
-        ("*compilation*" :noselect t)
-        ("*Backtrace*" :height 30)
-        ("*Messages*" :height 30)
-        ("*Occur*" :noselect t)
-        ("*Ido Completions*" :noselect t :height 30)
-        ("*magit-commit*" :noselect t :height 40 :width 80 :stick t)
-        ("*magit-diff*" :noselect t :height 40 :width 80)
-        ("*magit-edit-log*" :noselect t :height 15 :width 80)
-        ("\\*ansi-term\\*.*" :regexp t :height 30)
-        ("*shell*" :height 30)
-        (".*overtone.log" :regexp t :height 30)
-        ("*gists*" :height 30)
-        ("*sldb.*":regexp t :height 30)
-        ("*Kill Ring*" :height 30)
-        ("*Compile-Log*" :height 30 :stick t)
-        ("*git-gutter:diff*" :height 30 :stick t)))
+(push '("*Messages*" :noselect t :height 30)
+      popwin:special-display-config)
 
 ;; remove useless gui
 (dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode))
