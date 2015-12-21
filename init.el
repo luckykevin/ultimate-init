@@ -333,23 +333,14 @@
 
 (setq-default major-mode 'text-mode)
 
-; ;;; ido-mode
-; (setq ido-enable-prefix nil)
-; (setq ido-enable-case nil)
-; (setq ido-enable-flex-matching t)
-; (setq ido-everywhere t)
-; (ido-mode t)
 
-; ;; use icomplete in minibuffer
-; (icomplete-mode t)
-; (delete-selection-mode t)
 
-; ;; Auto refresh buffers
-; (global-auto-revert-mode 1)
+;; Auto refresh buffers
+(global-auto-revert-mode 1)
 
-; ;; Also auto refresh dired, but be quiet about it
-; (setq global-auto-revert-non-file-buffers t)
-; (setq auto-revert-verbose nil)
+;; Also auto refresh dired, but be quiet about it
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
 
 
 
@@ -420,17 +411,11 @@
 ; ;; set lang to enable Chinese display in shell-mode
 ; (setenv "LANG" "en_US.UTF-8")
 
-; ;; ido resentf
-; (defun ido-recentf-open ()
-;   "Use `ido-completing-read' to \\[find-file] a recent file"
-;   (interactive)
-;   (if (find-file (ido-completing-read "Find recent file: " recentf-list))
-;       (message "Opening file...")
-;     (message "Aborting")))
 
-; (setq recentf-save-file (concat user-emacs-directory ".recentf"))
-; (recentf-mode t)
-; (setq recentf-max-saved-items 50)
+
+(setq recentf-save-file (concat user-emacs-directory ".recentf"))
+(recentf-mode t)
+(setq recentf-max-saved-items 50)
 
 
 (setq sgml-basic-offset 4)
