@@ -8,7 +8,7 @@
 
 
 ;; theme
-(load-theme 'cyberpunk t)
+;(load-theme 'cyberpunk t)
 ; ;; (load-theme 'monokai t)
 
 
@@ -48,6 +48,7 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
 
 
@@ -88,15 +89,16 @@
                 'git-gutter:stage-hunk)
 
 
-; ;; window-number
+;; window-number
+(autoload 'window-number-mode "window-number" t)
+(window-number-mode 1)
+(autoload 'window-number-meta-mode
+  "window-number" t)
+(window-number-meta-mode 1)
+
 ; (add-to-list 'el-get-sources
 ;              '(:name window-number
 ;                      :after (progn
-;                               (autoload 'window-number-mode "window-number" t)
-;                               (window-number-mode 1)
-;                               (autoload 'window-number-meta-mode
-;                                 "window-number" t)
-;                               (window-number-meta-mode 1))))
 
 ; ;; elisp
 ; (defun ome-remove-elc-on-save ()
@@ -413,6 +415,7 @@
 ;; GUI
 (setq popwin:special-display-config
       '(("*Help*"  :height 30)
+        ("*Buffer List*")
         ("*Completions*" :noselect t)
         ("*Messages*" :noselect t :height 30)
         ("*Apropos*" :noselect t :height 30)
@@ -434,7 +437,7 @@
         ("*git-gutter:diff*" :height 30 :stick t)))
 
 ;; remove useless gui
-(dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode))
+(dolist (mode '(tool-bar-mode scroll-bar-mode))
   (when (fboundp mode) (funcall mode -1)))
 
 ;; show parenthesis match
@@ -540,3 +543,19 @@
 (add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'geiser-repl-mode))
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(helm-M-x-fuzzy-match t)
+ '(helm-buffers-fuzzy-matching t)
+ '(helm-recentf-fuzzy-match nil))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
