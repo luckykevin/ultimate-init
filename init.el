@@ -360,8 +360,6 @@
 (show-paren-mode 1)
 (setq show-paren-style 'parenthesis)
 
-(global-hl-line-mode t)
-
 ;; auto-fill mode
 (setq-default fill-column 79)
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -453,3 +451,20 @@
 (add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'geiser-repl-mode))
+
+
+(setq blink-cursor-blinks 5)
+(blink-cursor-mode 1)
+(setq-default cursor-type 'bar)
+
+(dolist (hook '(text-mode-hook))
+  (add-hook hook (lambda () (flyspell-mode 1))))
+
+(global-set-key (kbd "<f8>") 'ispell-word)
+
+(defun flyspell-check-next-highlighted-word ()
+  "Custom function to spell check next highlighted word"
+  (interactive)
+  (flyspell-goto-next-error)
+  (ispell-word))
+(global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
