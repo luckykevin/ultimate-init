@@ -8,7 +8,7 @@
 
 
 ;; theme
-; (load-theme 'cyberpunk t)
+;(load-theme 'cyberpunk t)
 ; ;; (load-theme 'monokai t)
 
 
@@ -48,6 +48,7 @@
 (global-set-key (kbd "M-x") 'helm-M-x)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(global-set-key (kbd "C-x C-b") 'helm-buffers-list)
 (global-set-key (kbd "C-x C-r") 'helm-recentf)
 
 
@@ -88,12 +89,13 @@
                 'git-gutter:stage-hunk)
 
 
-; ;; window-number
+;; window-number
 (autoload 'window-number-mode "window-number" t)
 (window-number-mode 1)
 (autoload 'window-number-meta-mode
   "window-number" t)
 (window-number-meta-mode 1)
+
 
 ; ;; elisp
 ; (defun ome-remove-elc-on-save ()
@@ -349,11 +351,15 @@
 ;; popwin
 (require 'popwin)
 (popwin-mode 1)
+
 (push '("*Messages*" :noselect t :height 30)
       popwin:special-display-config)
+(push '("*Buffer List*")
+      popwin:special-display-config)
+
 
 ;; remove useless gui
-(dolist (mode '(menu-bar-mode tool-bar-mode scroll-bar-mode))
+(dolist (mode '(tool-bar-mode scroll-bar-mode))
   (when (fboundp mode) (funcall mode -1)))
 
 ;; show parenthesis match
@@ -452,7 +458,6 @@
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'geiser-repl-mode))
 
-
 (setq blink-cursor-blinks 5)
 (blink-cursor-mode 1)
 (setq-default cursor-type 'bar)
@@ -468,3 +473,19 @@
   (flyspell-goto-next-error)
   (ispell-word))
 (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(helm-M-x-fuzzy-match t)
+ '(helm-buffers-fuzzy-matching t)
+ '(helm-recentf-fuzzy-match nil))
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
