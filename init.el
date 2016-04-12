@@ -448,7 +448,7 @@
 ; (set-fontset-font t 'han (font-spec :family "Hiragino Sans GB" :size 16))
                                         ; (set-fontset-font "fontset-default" 'gb18030' ("STHeiti" . "unicode-bmp"))
 
-(add-to-list 'custom-theme-load-path "~/.emacs.d/elpa/moe-theme-20151124.1509/")
+
 (setq ad-redefinition-action 'accept)
 (load-theme 'moe-dark t)
 
