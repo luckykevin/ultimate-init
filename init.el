@@ -7,11 +7,6 @@
 (package-initialize)
 
 
-;; theme
-;(load-theme 'cyberpunk t)
-; ;; (load-theme 'monokai t)
-
-
 ;; power-line
 (powerline-center-theme)
 
@@ -97,33 +92,24 @@
 (window-number-meta-mode 1)
 
 
-; ;; elisp
-; (defun ome-remove-elc-on-save ()
-;   "If you're saving an elisp file, likely the .elc is no longer valid."
-;   (make-local-variable 'after-save-hook)
-;   (add-hook 'after-save-hook
-;             (lambda ()
-;               (if (file-exists-p (concat buffer-file-name "c"))
-;                   (delete-file (concat buffer-file-name "c"))))))
+;; elisp
+(defun ome-remove-elc-on-save ()
+  "If you're saving an elisp file, likely the .elc is no longer valid."
+  (make-local-variable 'after-save-hook)
+  (add-hook 'after-save-hook
+            (lambda ()
+              (if (file-exists-p (concat buffer-file-name "c"))
+                  (delete-file (concat buffer-file-name "c"))))))
 
-; (add-hook 'emacs-lisp-mode-hook 'ome-remove-elc-on-save)
+(add-hook 'emacs-lisp-mode-hook 'ome-remove-elc-on-save)
 
-; (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 ; (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 ; (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 
-; ;; elisp-slime-nav
-; (defun ome-elisp-slime-nav-setup ()
-;   (dolist (hook '(emacs-lisp-mode-hook
-;                   lisp-interaction-mode-hook
-;                   ielm-mode-hook
-;                   eshell-mode-hook))
-;     (add-hook hook 'turn-on-elisp-slime-nav-mode)))
+;; elisp-slime-nav
+(add-hook 'emacs-lisp-mode-hook 'turn-on-elisp-slime-nav-mode)
 
-; (add-to-list 'el-get-sources
-;              '(:name elisp-slime-nav
-;                      :after (progn
-;                               (ome-elisp-slime-nav-setup))))
 
 ; ;; ace-jump-mode
 (require 'ace-jump-mode)
@@ -132,19 +118,6 @@
         ace-jump-line-mode))
 (global-set-key (kbd "C-o") 'ace-jump-mode)
 (ace-jump-mode-enable-mark-sync)
-
-
-; ;; multiple-cursors
-; (add-to-list 'el-get-sources
-;              '(:name multiple-cursors
-;                      :after (progn
-;                               (global-set-key (kbd "C->") 'mc/mark-next-like-this)
-;                               (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-;                               (global-set-key (kbd "C-c C-a") 'mc/mark-all-like-this)
-;                               (global-set-key (kbd "C-c e l")
-;                                               'mc/edit-lines))))
-
-
 
 
 ;;; Customized configuration
@@ -245,15 +218,15 @@
 (global-set-key (kbd "<C-return>") 'open-line-below)
 (global-set-key (kbd "<C-S-return>") 'open-line-above)
 
-; (defun live-show-messages ()
-;   (interactive)
-;   (popwin:display-buffer "*Messages*"))
+(defun live-show-messages ()
+  (interactive)
+  (popwin:display-buffer "*Messages*"))
 
-; (global-set-key (kbd "C-c s m") 'live-show-messages)
+(global-set-key (kbd "C-c s m") 'live-show-messages)
 
 ; ;;scroll other window
-; (global-set-key (kbd "C-M-]") 'scroll-other-window)
-; (global-set-key (kbd "C-M-[") 'scroll-other-window-down)
+(global-set-key (kbd "C-M-]") 'scroll-other-window)
+(global-set-key (kbd "C-M-[") 'scroll-other-window-down)
 
 ; (global-set-key (kbd "M-'") 'repeat)
 ; (global-set-key (kbd "C-x M-f") 'ido-find-file-other-window)
@@ -374,10 +347,11 @@
 ;; font
 (if (member "Monaco" (font-family-list))
     (set-face-attribute
-     'default nil :font "Monaco 13"))
+     'default nil :font "Monaco 12"))
 
 
-;; mode-hooks
+;;;; Mode hooks
+
 ;; outline-mode
 (add-hook 'prog-mode-hook
           (lambda ()
@@ -444,10 +418,6 @@
 
 (global-set-key (kbd "M-k") 'backward-kill-line)
 
-; (set-default-font "Source Code Pro-14")
-; (set-fontset-font t 'han (font-spec :family "Hiragino Sans GB" :size 16))
-                                        ; (set-fontset-font "fontset-default" 'gb18030' ("STHeiti" . "unicode-bmp"))
-
 
 (setq ad-redefinition-action 'accept)
 (require 'moe-theme)
@@ -475,15 +445,9 @@
   (ispell-word))
 (global-set-key (kbd "M-<f8>") 'flyspell-check-next-highlighted-word)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(helm-M-x-fuzzy-match t)
- '(helm-buffers-fuzzy-matching t)
- '(helm-recentf-fuzzy-match nil))
 
+
+;;;; Scheme config
 
 (autoload 'paredit-mode "paredit"
   "Minor mode for pseudo-structurally editing Lisp code."
@@ -535,9 +499,11 @@
     (define-key scheme-mode-map (kbd "<f6>") 'scheme-send-definition-split-window)))
 
 
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(helm-M-x-fuzzy-match t)
+ '(helm-buffers-fuzzy-matching t)
+ '(helm-recentf-fuzzy-match nil))
